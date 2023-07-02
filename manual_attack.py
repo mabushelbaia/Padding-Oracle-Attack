@@ -38,9 +38,9 @@ if __name__ == "__main__":
     IV    = iv_and_ctext[00:16]
     C1    = iv_and_ctext[16:32]  # 1st block of ciphertext
     C2    = iv_and_ctext[32:48]  # 2nd block of ciphertext
-    print(f"[{len(IV)}] IV:  {IV.hex()}")
-    print(f"[{len(C1)}] C1:  {C1.hex()}")
-    print(f"[{len(C2)}] C2:  {C2.hex()}")
+    print(f"[{len(IV)} Bytes] IV:  {IV.hex()}")
+    print(f"[{len(C1)} Bytes] C1:  {C1.hex()}")
+    print(f"[{len(C2)} Bytes] C2:  {C2.hex()}")
     P = bytearray(32)
     C1_copy, IV_copy = bytearray(16), bytearray(16)
     
@@ -63,7 +63,8 @@ if __name__ == "__main__":
         P[16 - k] = IV_copy[16 - k] ^ IV[16 - k] ^ k
         for j in range(1, k+1):
             IV_copy[16 - j] = IV[16 - j] ^ (k + 1) ^ P[16 - j]
-    print(f"[{len(P)}] P: {P.hex()}")
+    print(f"[{len(P)//2} Bytes] P1:  {P[00:16].hex()}")
+    print(f"[{len(P)//2} Bytes] P2:  {P[16:32].hex()}")
     
     
     
@@ -96,7 +97,7 @@ if __name__ == "__main__":
     # # Once you get all the 16 bytes of D2, you can easily get P2
     # P[15] = CC1[15] ^ D2[15] ^ 0x01
     # CC1[15] = D2[15] ^ 0x02 ^ P[15]
-    # print(f"[{len(P)}] P: {P.hex()}")
+    # print(f"[{len(P)} Bytes] P: {P.hex()}")
     # k = 2   
     # for i in range(256):
     #     CC1[16 - k] = i
@@ -108,7 +109,7 @@ if __name__ == "__main__":
     # P[14] = CC1[14] ^ D2[14] ^ 0x02
     # CC1[15] = D2[15] ^ 0x03 ^ P[15]
     # CC1[14] = D2[14] ^ 0x03 ^ P[14]
-    # print(f"[{len(P)}] P: {P.hex()}")
+    # print(f"[{len(P)} Bytes] P: {P.hex()}")
     # k = 3
     # for i in range(256):
     #     CC1[16 - k] = i
@@ -121,7 +122,7 @@ if __name__ == "__main__":
     # CC1[15] = D2[15] ^ 0x04 ^ P[15]
     # CC1[14] = D2[14] ^ 0x04 ^ P[14]
     # CC1[13] = D2[13] ^ 0x04 ^ P[13]
-    # print(f"[{len(P)}] P: {P.hex()}")
+    # print(f"[{len(P)} Bytes] P: {P.hex()}")
     # k = 4
     # for i in range(256):
     #     CC1[16 - k] = i
@@ -131,5 +132,5 @@ if __name__ == "__main__":
     #         print("CC1: " + CC1.hex())
     #         break
     # P[12] = CC1[12] ^ D2[12] ^ 0x04
-    # print(f"[{len(P)}] P: {P.hex()}")
+    # print(f"[{len(P)} Bytes] P: {P.hex()}")
     

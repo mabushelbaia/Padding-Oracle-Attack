@@ -13,6 +13,8 @@ bytes:
 	@echo "[${n} Bytes]"
 	@printf '%*s' "${n}" | tr ' ' 'X'| openssl enc -aes-128-cbc -e -k hi -md sha256 -pbkdf2 | openssl enc -aes-128-cbc -d -nopad -k hi -md sha256 -pbkdf2 | xxd
 
+attack:
+	python3 manual_attack.py
 help:
 	@echo "\033[34mmake\033[0m: default run with 5, 10, 16 bytes."
 	@echo "\033[34mmake bytes n=i\033[0m: where i is the number of bytes."
