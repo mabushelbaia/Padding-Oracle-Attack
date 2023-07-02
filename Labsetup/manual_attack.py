@@ -41,34 +41,28 @@ if __name__ == "__main__":
     print(f"[{len(IV)}] IV:  {IV.hex()}")
     print(f"[{len(C1)}] C1:  {C1.hex()}")
     print(f"[{len(C2)}] C2:  {C2.hex()}")
-    D2 = bytearray(16)
-    D2 = xor(C1, D2)
-    CC1 = bytearray(16)
     P = bytearray(32)
-    
-    CIV = bytearray(16)
-    D1 = bytearray(16)
-    D1 = xor(D1, IV)
+    C1_copy, IV_copy = bytearray(16), bytearray(16)
     
     for k in range(1, 17):
         for i in range(256):
-            CC1[16 - k] = i
-            status = oracle.decrypt(IV + CC1 + C2)
+            C1_copy[16 - k] = i
+            status = oracle.decrypt(IV + C1_copy + C2)
             if status == "Valid":
                 break
 
-        P[32 - k] = CC1[16 - k] ^ D2[16 - k] ^ k
+        P[32 - k] = C1_copy[16 - k] ^ C1[16 - k] ^ k
         for j in range(1, k+1):
-            CC1[16 - j] = D2[16 - j] ^ (k + 1) ^ P[32 - j]
+            C1_copy[16 - j] = C1[16 - j] ^ (k + 1) ^ P[32 - j]
         
         for i in range(256):
-            CIV[16 - k] = i
-            status = oracle.decrypt(CIV + C1)
+            IV_copy[16 - k] = i
+            status = oracle.decrypt(IV_copy + C1)
             if status == "Valid":
                 break
-        P[16 - k] = CIV[16 - k] ^ D1[16 - k] ^ k
+        P[16 - k] = IV_copy[16 - k] ^ IV[16 - k] ^ k
         for j in range(1, k+1):
-            CIV[16 - j] = D1[16 - j] ^ (k + 1) ^ P[16 - j]
+            IV_copy[16 - j] = IV[16 - j] ^ (k + 1) ^ P[16 - j]
     print(f"[{len(P)}] P: {P.hex()}")
     
     
