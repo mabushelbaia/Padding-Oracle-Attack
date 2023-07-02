@@ -41,25 +41,47 @@ if __name__ == "__main__":
     print(f"[{len(IV)}] IV:  {IV.hex()}")
     print(f"[{len(C1)}] C1:  {C1.hex()}")
     print(f"[{len(C2)}] C2:  {C2.hex()}")
+    D2 = bytearray(16)
+    D2 = xor(C1, D2)
+    CC1 = bytearray(16)
+    P = bytearray(32)
+    
+    CIV = bytearray(16)
+    D1 = bytearray(16)
+    D1 = xor(D1, IV)
+    
+    for k in range(1, 17):
+        for i in range(256):
+            CC1[16 - k] = i
+            status = oracle.decrypt(IV + CC1 + C2)
+            if status == "Valid":
+                break
 
-    ###############################################################
+        P[32 - k] = CC1[16 - k] ^ D2[16 - k] ^ k
+        for j in range(1, k+1):
+            CC1[16 - j] = D2[16 - j] ^ (k + 1) ^ P[32 - j]
+        
+        for i in range(256):
+            CIV[16 - k] = i
+            status = oracle.decrypt(CIV + C1)
+            if status == "Valid":
+                break
+        P[16 - k] = CIV[16 - k] ^ D1[16 - k] ^ k
+        for j in range(1, k+1):
+            CIV[16 - j] = D1[16 - j] ^ (k + 1) ^ P[16 - j]
+    print(f"[{len(P)}] P: {P.hex()}")
+    
+    
+    
+###############################################################
     # Here, we initialize D2 with C1, so when they are XOR-ed,
     # The result is 0. This is not required for the attack.
     # Its sole purpose is to make the printout look neat.
     # In the experiment, we will iteratively replace these values.
-    D2 = bytearray(16)
-    
-    for i in range(16):
-        D2[i] = C1[i]
-    print(f"[{len(D2)}] D2:  {D2.hex()}")
     ###############################################################
     # In the experiment, we need to iteratively modify CC1
     # We will send this CC1 to the oracle, and see its response.
-    CC1 = bytearray(16)
-
-    for i in range(16):
-        CC1[i] = 0x00
-    ###############################################################
+      ###############################################################
     # In each iteration, we focus on one byte of CC1.  
     # We will try all 256 possible values, and send the constructed
     # ciphertext CC1 + C2 (plus the IV) to the oracle, and see 
@@ -68,14 +90,52 @@ if __name__ == "__main__":
     # one valid value. This value helps us get one byte of D2. 
     # Repeating the method for 16 times, we get all the 16 bytes of D2.
 
-    K = 1
-    for i in range(256):
-          CC1[16 - K] = i
-          status = oracle.decrypt(IV + CC1 + C2)
-          if status == "Valid":
-              print("Valid: i = 0x{:02x}".format(i))
-              print("CC1: " + CC1.hex())
-    ###############################################################
-    # Once you get all the 16 bytes of D2, you can easily get P2
-    P2 = xor(C1, D2)
-    print("P2:  " + P2.hex())
+    # K = 1
+    # for i in range(256):
+    #       CC1[16 - K] = i
+    #       status = oracle.decrypt(IV + CC1 + C2)
+    #       if status == "Valid":
+    #           print("Valid: i = 0x{:02x}".format(i))
+    #           print("CC1: " + CC1.hex())
+    #           break
+    # ###############################################################
+    # # Once you get all the 16 bytes of D2, you can easily get P2
+    # P[15] = CC1[15] ^ D2[15] ^ 0x01
+    # CC1[15] = D2[15] ^ 0x02 ^ P[15]
+    # print(f"[{len(P)}] P: {P.hex()}")
+    # k = 2   
+    # for i in range(256):
+    #     CC1[16 - k] = i
+    #     status = oracle.decrypt(IV + CC1 + C2)
+    #     if status == "Valid":
+    #         print("Valid: i = 0x{:02x}".format(i))
+    #         print("CC1: " + CC1.hex())
+    #         break
+    # P[14] = CC1[14] ^ D2[14] ^ 0x02
+    # CC1[15] = D2[15] ^ 0x03 ^ P[15]
+    # CC1[14] = D2[14] ^ 0x03 ^ P[14]
+    # print(f"[{len(P)}] P: {P.hex()}")
+    # k = 3
+    # for i in range(256):
+    #     CC1[16 - k] = i
+    #     status = oracle.decrypt(IV + CC1 + C2)
+    #     if status == "Valid":
+    #         print("Valid: i = 0x{:02x}".format(i))
+    #         print("CC1: " + CC1.hex())
+    #         break
+    # P[13] = CC1[13] ^ D2[13] ^ 0x03
+    # CC1[15] = D2[15] ^ 0x04 ^ P[15]
+    # CC1[14] = D2[14] ^ 0x04 ^ P[14]
+    # CC1[13] = D2[13] ^ 0x04 ^ P[13]
+    # print(f"[{len(P)}] P: {P.hex()}")
+    # k = 4
+    # for i in range(256):
+    #     CC1[16 - k] = i
+    #     status = oracle.decrypt(IV + CC1 + C2)
+    #     if status == "Valid":
+    #         print("Valid: i = 0x{:02x}".format(i))
+    #         print("CC1: " + CC1.hex())
+    #         break
+    # P[12] = CC1[12] ^ D2[12] ^ 0x04
+    # print(f"[{len(P)}] P: {P.hex()}")
+    
