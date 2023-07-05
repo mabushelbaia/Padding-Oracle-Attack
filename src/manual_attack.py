@@ -31,11 +31,21 @@ class PaddingOracle:
 
 
 if __name__ == "__main__":
-    oracle = PaddingOracle('10.9.0.80', 5000)
-    IV, C1, C2 = oracle.ctext[:16], oracle.ctext[16:32], oracle.ctext[32:48]
-    P = bytearray(32)
-    C1_copy, IV_copy = bytearray(16), bytearray(16)
+    oracle = PaddingOracle('10.9.0.80', 6000)
+    IV, C1, C2, C3 = oracle.ctext[:16], oracle.ctext[16:32], oracle.ctext[32:48], oracle.ctext[48:]
+    P = bytearray(48)
+    C2_copy, C1_copy, IV_copy = bytearray(16), bytearray(16), bytearray(16)
     for k in range(1, 17):
+        for i in range(256):
+            C2_copy[16 - k] = i
+            status = oracle.decrypt(IV + C1 + C2_copy + C3)
+            if status == "Valid":
+                break
+
+        P[48 - k] = C2_copy[16 - k] ^ C2[16 - k] ^ k
+        for j in range(1, k+1):
+            C2_copy[16 - j] = C2[16 - j] ^ (k + 1) ^ P[48 - j]
+        
         for i in range(256):
             C1_copy[16 - k] = i
             status = oracle.decrypt(IV + C1_copy + C2)
@@ -58,6 +68,7 @@ if __name__ == "__main__":
     print(f"[{len(IV)} Bytes] IV:  {IV.hex()}")
     print(f"[{len(C1)} Bytes] C1:  {C1.hex()}")
     print(f"[{len(C2)} Bytes] C2:  {C2.hex()}")        
-    print(f"[{len(P)//2} Bytes] P1:  {P[00:16].hex()}")
-    print(f"[{len(P)//2} Bytes] P2:  {P[16:32].hex()}")
-    
+    print(f"[{len(P)//3} Bytes] P1:  {P[00:16].hex()}")
+    print(f"[{len(P)//3} Bytes] P2:  {P[16:32].hex()}")
+    print(f"[{len(P)//3} Bytes] P3:  {P[32:48].hex()}")
+    print(f"String: {P.decode()}")
