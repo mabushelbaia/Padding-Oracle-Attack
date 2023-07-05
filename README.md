@@ -1,7 +1,7 @@
 # Padding Oracle Attack
 
 🔗 | [Lab Description](docs/LAB.pdf) <br>
-🔗 | [Lab Report](/docs/Line_echo_cancellation_report.pdf)
+🔗 | [Lab Report](/docs/Padding_Oracle_Attack.pdf)
 
 ## Project Structure
 
