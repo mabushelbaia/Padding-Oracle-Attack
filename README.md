@@ -7,10 +7,10 @@
 ## Project Structure
 
 ```bash
-./
-├── docs/
-│  ├── LaTeX/
-│  │  ├── assets/
+.
+├── docs
+│  ├── LaTeX
+│  │  ├── assets
 │  │  │  ├── d_diagram.png
 │  │  │  ├── task1.png
 │  │  │  ├── task2.png
@@ -21,12 +21,13 @@
 │  │  ├── ieee.cls
 │  │  ├── lix.sty
 │  │  └── main.tex
-│  ├── LAB.pdf*
-│  └── Padding_Oracle_Attack.pdf*
-├── src/
-│  ├── docker-compose.yml
-│  ├── Makefile
-│  └── manual_attack.py*
+│  ├── LAB.pdf
+│  ├── Padding_Oracle_Attack.pdf
+│  └── tty.gif
+├── colors.py
+├── docker-compose.yml
+├── Makefile
+├── manual_attack.py
 └── README.md
 ```
 
