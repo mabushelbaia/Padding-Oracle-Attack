@@ -35,7 +35,7 @@ clone the project using the following command:
 
 ```bash
 git clone https://github.com/mabushelbaia/Padding-Oracle-Attack.git
-cd Padding-Oracle-Attack/src
+cd Padding-Oracle-Attack
 ```
 ### Task 1:
 ```bash
