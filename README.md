@@ -3,6 +3,7 @@
 🔗 | [Lab Description](docs/LAB.pdf) <br>
 🔗 | [Lab Report](/docs/Padding_Oracle_Attack.pdf)
 
+![docs/tty.gif](docs/tty.gif)
 ## Project Structure
 
 ```bash
