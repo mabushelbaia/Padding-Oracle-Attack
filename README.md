@@ -24,10 +24,9 @@
 │  ├── LAB.pdf
 │  ├── Padding_Oracle_Attack.pdf
 │  └── tty.gif
-├── colors.py
 ├── docker-compose.yml
 ├── Makefile
-├── manual_attack.py
+├── main.py
 └── README.md
 ```
 
@@ -55,6 +54,6 @@ docker-compise up -d  #d for detched
 ```
 Then you can run the script to decrypt the secret message.
 ```bash
-python3 manual_attack.py
+python3 main.py
 ```
 
